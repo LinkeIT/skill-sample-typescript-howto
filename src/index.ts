@@ -29,8 +29,8 @@ class LaunchRequestHandler implements RequestHandler {
 
     const item = requestAttributes.t(getRandomItem(Object.keys(recipes.RECIPE_EN_US)));
 
-    const speakOutput = requestAttributes.t("WELCOME_MESSAGE", requestAttributes.t("SKILL_NAME"), item);
-    const repromptOutput = requestAttributes.t("WELCOME_REPROMPT");
+    const speakOutput = requestAttributes.t(Strings.WELCOME_MESSAGE, requestAttributes.t(Strings.SKILL_NAME), item);
+    const repromptOutput = requestAttributes.t(Strings.WELCOME_REPROMPT);
 
     handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
 
@@ -54,16 +54,16 @@ class RecipeHandler implements RequestHandler {
       throw new Error("Unexpected Error");
     }
 
-    const itemSlot = handlerInput.requestEnvelope.request.intent.slots!.Item;
+    const itemSlot = handlerInput.requestEnvelope.request.intent.slots.Item;
     let itemName: string;
     if (itemSlot && itemSlot.value) {
       itemName = itemSlot.value.toLowerCase();
     } else {
-      throw new Error("Slot.Item not found");
+      throw new Error("Slots.Item not found");
     }
 
-    const cardTitle = requestAttributes.t("DISPLAY_CARD_TITLE", requestAttributes.t("SKILL_NAME"), itemName);
-    const myRecipes = requestAttributes.t("RECIPES");
+    const cardTitle = requestAttributes.t(Strings.DISPLAY_CARD_TITLE, requestAttributes.t(Strings.SKILL_NAME), itemName);
+    const myRecipes = requestAttributes.t(Strings.RECIPES);
     const recipe = myRecipes[itemName];
     let speakOutput = "";
 
@@ -80,11 +80,11 @@ class RecipeHandler implements RequestHandler {
         .withSimpleCard(cardTitle, recipe)
         .getResponse();
     }
-    const repromptSpeech = requestAttributes.t("RECIPE_NOT_FOUND_REPROMPT");
+    const repromptSpeech = requestAttributes.t(Strings.RECIPE_NOT_FOUND_REPROMPT);
     if (itemName) {
-      speakOutput += requestAttributes.t("RECIPE_NOT_FOUND_WITH_ITEM_NAME", itemName);
+      speakOutput += requestAttributes.t(Strings.RECIPE_NOT_FOUND_WITH_ITEM_NAME, itemName);
     } else {
-      speakOutput += requestAttributes.t("RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME");
+      speakOutput += requestAttributes.t(Strings.RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME);
     }
     speakOutput += repromptSpeech;
 
@@ -112,8 +112,8 @@ class HelpHandler implements RequestHandler {
 
     const item = requestAttributes.t(getRandomItem(Object.keys(recipes.RECIPE_EN_US)));
 
-    sessionAttributes.speakOutput = requestAttributes.t("HELP_MESSAGE", item);
-    sessionAttributes.repromptSpeech = requestAttributes.t("HELP_REPROMPT", item);
+    sessionAttributes.speakOutput = requestAttributes.t(Strings.HELP_MESSAGE, item);
+    sessionAttributes.repromptSpeech = requestAttributes.t(Strings.HELP_REPROMPT, item);
 
     return handlerInput.responseBuilder
       .speak(sessionAttributes.speakOutput)
@@ -148,7 +148,7 @@ class ExitHandler implements RequestHandler {
   }
   public handle(handlerInput: HandlerInput): Response {
     const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
-    const speakOutput = requestAttributes.t("STOP_MESSAGE", requestAttributes.t("SKILL_NAME"));
+    const speakOutput = requestAttributes.t(Strings.STOP_MESSAGE, requestAttributes.t(Strings.SKILL_NAME));
 
     return handlerInput.responseBuilder
       .speak(speakOutput)
@@ -178,9 +178,10 @@ class CustomErrorHandler implements ErrorHandler {
     console.log(`Error handled: ${error.message}`);
     console.log(`Error stack: ${error.stack}`);
 
+    const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
     return handlerInput.responseBuilder
-      .speak("Sorry, I can't understand the command. Please say again.")
-      .reprompt("Sorry, I can't understand the command. Please say again.")
+      .speak(requestAttributes.t(Strings.ERROR_MESSAGE))
+      .reprompt(requestAttributes.t(Strings.ERROR_REPROMPT))
       .getResponse();
   }
 }
@@ -242,22 +243,26 @@ export enum Strings {
   RECIPE_NOT_FOUND_WITH_ITEM_NAME = "RECIPE_NOT_FOUND_WITH_ITEM_NAME",
   RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME = "RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME",
   RECIPE_NOT_FOUND_REPROMPT = "RECIPE_NOT_FOUND_REPROMPT",
+  ERROR_MESSAGE = "ERROR_MESSAGE",
+  ERROR_REPROMPT = "ERROR_REPROMPT",
 }
 interface IRegionStrings {
   [Strings.RECIPES]: { [key: string]: string };
   [Strings.SKILL_NAME]: string;
 }
 interface ILangStrings extends IRegionStrings {
-  [Strings.WELCOME_MESSAGE]?: string;
-  [Strings.WELCOME_REPROMPT]?: string;
-  [Strings.DISPLAY_CARD_TITLE]?: string;
-  [Strings.HELP_MESSAGE]?: string;
-  [Strings.HELP_REPROMPT]?: string;
-  [Strings.STOP_MESSAGE]?: string;
-  [Strings.RECIPE_REPEAT_MESSAGE]?: string;
-  [Strings.RECIPE_NOT_FOUND_WITH_ITEM_NAME]?: string;
-  [Strings.RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME]?: string;
-  [Strings.RECIPE_NOT_FOUND_REPROMPT]?: string;
+  [Strings.WELCOME_MESSAGE]: string;
+  [Strings.WELCOME_REPROMPT]: string;
+  [Strings.DISPLAY_CARD_TITLE]: string;
+  [Strings.HELP_MESSAGE]: string;
+  [Strings.HELP_REPROMPT]: string;
+  [Strings.STOP_MESSAGE]: string;
+  [Strings.RECIPE_REPEAT_MESSAGE]: string;
+  [Strings.RECIPE_NOT_FOUND_WITH_ITEM_NAME]: string;
+  [Strings.RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME]: string;
+  [Strings.RECIPE_NOT_FOUND_REPROMPT]: string;
+  [Strings.ERROR_MESSAGE]: string;
+  [Strings.ERROR_REPROMPT]: string;
 }
 
 const enData: i18next.ResourceLanguage = {
@@ -274,6 +279,8 @@ const enData: i18next.ResourceLanguage = {
     RECIPE_NOT_FOUND_WITH_ITEM_NAME: "I'm sorry, I currently do not know the recipe for %s. ",
     RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME: "I'm sorry, I currently do not know that recipe. ",
     RECIPE_NOT_FOUND_REPROMPT: "What else can I help with?",
+    ERROR_MESSAGE: "Sorry, I can't understand the command. Please say again.",
+    ERROR_REPROMPT: "Sorry, I can't understand the command. Please say again.",
   } as ILangStrings,
 };
 
@@ -305,7 +312,9 @@ const deData: i18next.ResourceLanguage = {
     RECIPE_NOT_FOUND_WITH_ITEM_NAME: "Tut mir leid, ich kenne derzeit das Rezept für %s nicht. ",
     RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME: "Tut mir leid, ich kenne derzeit dieses Rezept nicht. ",
     RECIPE_NOT_FOUND_REPROMPT: "Womit kann ich dir sonst helfen?",
-  } as IRegionStrings,
+    ERROR_MESSAGE: "Entschuldigung, ich kann den Befehl nicht verstehen. Bitte noch einmal sagen.",
+    ERROR_REPROMPT: "Entschuldigung, ich kann den Befehl nicht verstehen. Bitte noch einmal sagen.",
+  } as ILangStrings,
 };
 
 const languageStrings: i18next.Resource = {
