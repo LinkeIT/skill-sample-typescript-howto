@@ -229,49 +229,88 @@ exports.handler = skillBuilder
 // langauge strings for localization
 // TODO: The items below this comment need your attention
 
-const languageStrings = {
-  'en': {
-    translation: {
-      RECIPES: recipes.RECIPE_EN_US,
-      SKILL_NAME: 'Minecraft Helper',
-      WELCOME_MESSAGE: 'Welcome to %s. You can ask a question like, what\'s the recipe for a %s? ... Now, what can I help you with?',
-      WELCOME_REPROMPT: 'For instructions on what you can say, please say help me.',
-      DISPLAY_CARD_TITLE: '%s  - Recipe for %s.',
-      HELP_MESSAGE: 'You can ask questions such as, what\'s the recipe for a %s, or, you can say exit...Now, what can I help you with?',
-      HELP_REPROMPT: 'You can say things like, what\'s the recipe for a %s, or you can say exit...Now, what can I help you with?',
-      STOP_MESSAGE: 'Goodbye!',
-      RECIPE_REPEAT_MESSAGE: 'Try saying repeat.',
-      RECIPE_NOT_FOUND_WITH_ITEM_NAME: 'I\'m sorry, I currently do not know the recipe for %s. ',
-      RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME: 'I\'m sorry, I currently do not know that recipe. ',
-      RECIPE_NOT_FOUND_REPROMPT: 'What else can I help with?',
-    },
-  },
-  'en-US': {
-    translation: {
-      RECIPES: recipes.RECIPE_EN_US,
-      SKILL_NAME: 'American Minecraft Helper',
-    },
-  },
-  'en-GB': {
-    translation: {
-      RECIPES: recipes.RECIPE_EN_GB,
-      SKILL_NAME: 'British Minecraft Helper',
-    },
-  },
-  'de': {
-    translation: {
-      RECIPES: recipes.RECIPE_DE_DE,
-      SKILL_NAME: 'Assistent für Minecraft in Deutsch',
-      WELCOME_MESSAGE: 'Willkommen bei %s. Du kannst beispielsweise die Frage stellen: Welche Rezepte gibt es für eine %s? ... Nun, womit kann ich dir helfen?',
-      WELCOME_REPROMPT: 'Wenn du wissen möchtest, was du sagen kannst, sag einfach „Hilf mir“.',
-      DISPLAY_CARD_TITLE: '%s - Rezept für %s.',
-      HELP_MESSAGE: 'Du kannst beispielsweise Fragen stellen wie „Wie geht das Rezept für eine %s“ oder du kannst „Beenden“ sagen ... Wie kann ich dir helfen?',
-      HELP_REPROMPT: 'Du kannst beispielsweise Sachen sagen wie „Wie geht das Rezept für eine %s“ oder du kannst „Beenden“ sagen ... Wie kann ich dir helfen?',
-      STOP_MESSAGE: 'Auf Wiedersehen!',
-      RECIPE_REPEAT_MESSAGE: 'Sage einfach „Wiederholen“.',
-      RECIPE_NOT_FOUND_WITH_ITEM_NAME: 'Tut mir leid, ich kenne derzeit das Rezept für %s nicht. ',
-      RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME: 'Tut mir leid, ich kenne derzeit dieses Rezept nicht. ',
-      RECIPE_NOT_FOUND_REPROMPT: 'Womit kann ich dir sonst helfen?',
-    },
-  },
+export enum Strings {
+  RECIPES = "RECIPES",
+  SKILL_NAME = "SKILL_NAME",
+  WELCOME_MESSAGE = "WELCOME_MESSAGE",
+  WELCOME_REPROMPT = "WELCOME_REPROMPT",
+  DISPLAY_CARD_TITLE = "DISPLAY_CARD_TITLE",
+  HELP_MESSAGE = "HELP_MESSAGE",
+  HELP_REPROMPT = "HELP_REPROMPT",
+  STOP_MESSAGE = "STOP_MESSAGE",
+  RECIPE_REPEAT_MESSAGE = "RECIPE_REPEAT_MESSAGE",
+  RECIPE_NOT_FOUND_WITH_ITEM_NAME = "RECIPE_NOT_FOUND_WITH_ITEM_NAME",
+  RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME = "RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME",
+  RECIPE_NOT_FOUND_REPROMPT = "RECIPE_NOT_FOUND_REPROMPT",
+}
+interface IRegionStrings {
+  [Strings.RECIPES]: { [key: string]: string };
+  [Strings.SKILL_NAME]: string;
+}
+interface ILangStrings extends IRegionStrings {
+  [Strings.WELCOME_MESSAGE]?: string;
+  [Strings.WELCOME_REPROMPT]?: string;
+  [Strings.DISPLAY_CARD_TITLE]?: string;
+  [Strings.HELP_MESSAGE]?: string;
+  [Strings.HELP_REPROMPT]?: string;
+  [Strings.STOP_MESSAGE]?: string;
+  [Strings.RECIPE_REPEAT_MESSAGE]?: string;
+  [Strings.RECIPE_NOT_FOUND_WITH_ITEM_NAME]?: string;
+  [Strings.RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME]?: string;
+  [Strings.RECIPE_NOT_FOUND_REPROMPT]?: string;
+}
+
+const enData: i18next.ResourceLanguage = {
+  translation: {
+    RECIPES: recipes.RECIPE_EN_US,
+    SKILL_NAME: "Minecraft Helper",
+    WELCOME_MESSAGE: "Welcome to %s. You can ask a question like, what's the recipe for a %s? ... Now, what can I help you with?",
+    WELCOME_REPROMPT: "For instructions on what you can say, please say help me.",
+    DISPLAY_CARD_TITLE: "%s  - Recipe for %s.",
+    HELP_MESSAGE: "You can ask questions such as, what's the recipe for a %s, or, you can say exit...Now, what can I help you with?",
+    HELP_REPROMPT: "You can say things like, what's the recipe for a %s, or you can say exit...Now, what can I help you with?",
+    STOP_MESSAGE: "Goodbye!",
+    RECIPE_REPEAT_MESSAGE: "Try saying repeat.",
+    RECIPE_NOT_FOUND_WITH_ITEM_NAME: "I'm sorry, I currently do not know the recipe for %s. ",
+    RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME: "I'm sorry, I currently do not know that recipe. ",
+    RECIPE_NOT_FOUND_REPROMPT: "What else can I help with?",
+  } as ILangStrings,
+};
+
+const enusData: i18next.ResourceLanguage = {
+  translation: {
+    RECIPES: recipes.RECIPE_EN_US,
+    SKILL_NAME: "American Minecraft Helper",
+  } as IRegionStrings,
+};
+
+const engbData: i18next.ResourceLanguage = {
+  translation: {
+    RECIPES: recipes.RECIPE_EN_GB,
+    SKILL_NAME: "British Minecraft Helper",
+  } as IRegionStrings,
+};
+
+const deData: i18next.ResourceLanguage = {
+  translation: {
+    RECIPES: recipes.RECIPE_DE_DE,
+    SKILL_NAME: "Assistent für Minecraft in Deutsch",
+    WELCOME_MESSAGE: "Willkommen bei %s. Du kannst beispielsweise die Frage stellen: Welche Rezepte gibt es für eine %s? ... Nun, womit kann ich dir helfen?",
+    WELCOME_REPROMPT: "Wenn du wissen möchtest, was du sagen kannst, sag einfach „Hilf mir“.",
+    DISPLAY_CARD_TITLE: "%s - Rezept für %s.",
+    HELP_MESSAGE: "Du kannst beispielsweise Fragen stellen wie „Wie geht das Rezept für eine %s“ oder du kannst „Beenden“ sagen ... Wie kann ich dir helfen?",
+    HELP_REPROMPT: "Du kannst beispielsweise Sachen sagen wie „Wie geht das Rezept für eine %s“ oder du kannst „Beenden“ sagen ... Wie kann ich dir helfen?",
+    STOP_MESSAGE: "Auf Wiedersehen!",
+    RECIPE_REPEAT_MESSAGE: "Sage einfach „Wiederholen“.",
+    RECIPE_NOT_FOUND_WITH_ITEM_NAME: "Tut mir leid, ich kenne derzeit das Rezept für %s nicht. ",
+    RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME: "Tut mir leid, ich kenne derzeit dieses Rezept nicht. ",
+    RECIPE_NOT_FOUND_REPROMPT: "Womit kann ich dir sonst helfen?",
+  } as IRegionStrings,
+};
+
+const languageStrings: i18next.Resource = {
+  "en": enData,
+  "en-US": enusData,
+  "en-GB": engbData,
+  "de": deData,
 };
